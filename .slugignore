@@ -1,0 +1,12 @@
+*.csv
+*.tsv
+*.xlsx
+*.ipynb
+*.pkl
+*.h5
+*.zip
+*.tar
+*.gz
+datasets/
+notebooks/
+__pycache__/
