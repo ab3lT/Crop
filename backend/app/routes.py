@@ -22,15 +22,34 @@ from datetime import datetime
 import csv
 from openpyxl import Workbook
 import io
-
+import boto3
+import gdown
 # from .__init__ import create_app
 # app = create_app()
 
 current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # Load model and expected feature columns
-model = joblib.load(os.path.join(current_dir, 'Random_Forest_model.pkl'))
-expected_columns = joblib.load(os.path.join(current_dir, 'model_features.pkl'))
+# model = joblib.load(os.path.join(current_dir, 'Random_Forest_model.pkl'))
+# s3 = boto3.client('s3')
+# model_obj = s3.get_object(Bucket='crop-model', Key='Random_Forest_model.pkl')
+# model = joblib.load(model_obj['Body'])
+# Set your model URL and download path
+drive_url = 'https://drive.google.com/uc?id=1uL7zLJwIzAx8m_Tj3e4xobvtMAwTaSNg'
+model_path = 'Random_Forest_model.pkl'
+
+# Download the model file from Google Drive if not already present
+if not os.path.exists(model_path):
+    gdown.download(drive_url, model_path, quiet=False)
+
+# Load the model
+model = joblib.load(model_path)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+model_features_path = os.path.join(BASE_DIR, "model_features.pkl")
+expected_columns = joblib.load(model_features_path)
+# Load expected columns if available (you need to also provide the pkl file for this)
+# expected_columns = joblib.load('model_features.pkl')  # This also must be downloaded
+# expected_columns = joblib.load(os.path.join(current_dir, 'model_features.pkl'))
 
 
 # Dynamically extract crops and areas
